@@ -41,6 +41,30 @@ def del_hotel(hotel_id: int):
     hotels = [hotel for hotel in hotels if hotel['id'] != hotel_id]
     return {'status': 'OK'}
 
+@app.put("/hotels/{hotel_id}")
+def change_hotel(
+        hotel_id: int,
+        title: str = Body(),
+        name: str = Body()
+):
+    global hotels
+    hotels[hotel_id-1]['title'] = title
+    hotels[hotel_id-1]['name'] = name
+    return {'status': 'OK'}
+
+@app.patch("/hotels/{hotel_id}")
+def edit_hotel(
+        hotel_id: int,
+        title: str | None = Body(None),
+        name: str | None = Body(None)
+):
+    global hotels
+    if name:
+        hotels[hotel_id - 1]['name'] = name
+    if title:
+        hotels[hotel_id - 1]['title'] = title
+    return {'status': 'OK'}
+
 
 if __name__ == '__main__':
     uvicorn.run('__main__:app', reload=True)
