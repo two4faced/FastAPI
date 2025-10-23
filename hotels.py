@@ -18,8 +18,8 @@ hotels = [
 
 @router.get('', summary='Получить отели')
 def get_hotels(
-        page: int | None = Query(None),
-        per_page: int | None = Query(None),
+        page: int = Query(1),
+        per_page: int = Query(3),
         id: int | None = Query(None, description='ID отеля'),
         title: str | None = Query(None, description='Название отеля')
 ):
@@ -31,11 +31,9 @@ def get_hotels(
             continue
         hotels_.append(hotel)
 
-    if page and per_page:
-        offset_min = (page - 1) * per_page
-        offset_max = page * per_page
-        return hotels_[offset_min:offset_max]
-    return hotels_
+    offset_min = (page - 1) * per_page
+    offset_max = page * per_page
+    return hotels_[offset_min:offset_max]
 
 
 @router.post('', summary='Добавить отель')
@@ -87,5 +85,4 @@ def edit_hotel(hotel_id: int, hotel_data: HotelPatch):
         hotels[hotel_id - 1]['name'] = hotel_data.name
     if hotel_data.title:
         hotels[hotel_id - 1]['title'] = hotel_data.title
-
     return {'status': 'OK'}
